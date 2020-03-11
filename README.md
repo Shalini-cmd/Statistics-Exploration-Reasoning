@@ -1,5 +1,5 @@
 # Statistics-Exploration-Reasoning
-Covers code used by me for statistical analyses:
+Covers R markdown of codes used by me for statistical analyses:
 Confidence Interval Estimation,
 Hypothesis Testing,
 Type 1 & 2 Error Analysis,
