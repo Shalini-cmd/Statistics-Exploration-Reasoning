@@ -1,0 +1,835 @@
+---
+title: "Final_Exam_Part_1"
+author: "Shalini Mishra"
+date: "12/14/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Question 1
+#a. 
+```{r}
+data_ex1 <- read.csv("Question1.csv")
+
+#head(data_ex1)
+
+#Walmart Stock Returns 
+#Computing Correlation and creating a scatterplot
+plot(data_ex1$MKTRET, data_ex1$WALMARTRET, main = "Stock Returns versus Market Returns", 
+     xlab = "Rm - Rf", ylab = "Walmart R - Rf")
+abline(lm(data_ex1$WALMARTRET ~ data_ex1$MKTRET))
+
+cor(data_ex1$MKTRET, data_ex1$WALMARTRET)
+
+#Running a Two tailed Pearson Correlation test
+cor.test(data_ex1$MKTRET, data_ex1$WALMARTRET, alternative = "two.sided", method = "pearson")
+
+#CAPM Regression Model
+Wmt_CAPM <- lm(data_ex1$WALMARTRET ~ data_ex1$MKTRET)
+
+anova(Wmt_CAPM)
+
+summary(Wmt_CAPM)
+```
+The estimate for the beta coefficient,$\beta_{wmt}$ is 0.73167 and its standard error is 0.19121. 
+As $\beta_{wmt}$< 1, Walmart stocks are conservative ie. less risky than the market 
+```{r}
+# DELL Stock Returns
+#Computing Correlation and creating a scatterplot
+plot(data_ex1$MKTRET, data_ex1$DELLRET, main = "Stock Returns versus Market Returns", 
+     xlab = "Rm - Rf", ylab = "Dell R - Rf")
+abline(lm(data_ex1$DELLRET ~ data_ex1$MKTRET))
+
+cor(data_ex1$MKTRET, data_ex1$DELLRET)
+
+#Running a Two tailed Pearson Correlation test
+cor.test(data_ex1$MKTRET, data_ex1$DELLRET, alternative = "two.sided", method = "pearson")
+
+#CAPM Regression Model
+Dell_CAPM <- lm(data_ex1$DELLRET ~ data_ex1$MKTRET)
+
+anova(Dell_CAPM)
+
+summary(Dell_CAPM)
+```
+The estimate for the beta coefficient,$\beta_{Dell}$ is 1.6679 and its standard error is 0.32605. 
+As $\beta_{Dell}$> 1, Dell stocks are more aggresive ie. riskier than the market 
+```{r}
+#SABRE Stock Returns
+#Computing Correlation and creating a scatterplot
+plot(data_ex1$MKTRET, data_ex1$SABRERET, main = "Stock Returns versus Market Returns", 
+     xlab = "Rm - Rf", ylab = "Sabre R - Rf")
+abline(lm(data_ex1$SABRERET ~ data_ex1$MKTRET))
+
+cor(data_ex1$MKTRET, data_ex1$SABRERET)
+
+#Running a Two tailed Pearson Correlation test
+cor.test(data_ex1$MKTRET, data_ex1$SABRERET, alternative = "two.sided", method = "pearson")
+
+#CAPM Regression Model
+Sabre_CAPM <- lm(data_ex1$SABRERET ~ data_ex1$MKTRET)
+
+anova(Sabre_CAPM)
+
+summary(Sabre_CAPM)
+```
+The estimate for the beta coefficient,$\beta_{Sabre}$ is 1.47 and its standard error is 0.2455. 
+As $\beta_{Sabre}$> 1, Sabre stocks are more agrresive ie. riskier than the market 
+
+#b.  
+Test for linear relationship between the firm return and market return for each of these three companies
+For each of these companies, we will consider the following 2 two-tailed tests:  
+ -1. T-test( Inferences about $\beta$)  
+  $H_{0}$: $\beta$=0   
+  $H_{1}$: $\beta \neq 0$  
+  Assessment: whether there is a linear relationship between y and x  
+ -2. Correlation Test (Inferences about $\rho$)
+  $H_{0}$: $\rho$=0  
+  $H_{1}$: $\rho \neq 0$ 
+  Assessment: whether there is a linear correlation between y and x  
+  In both the cases, if $\H_0$ is rejected, it means that a linear relationship exists between the stock and market returns. 
+ -For Walmart Stocks:
+  From the summary table, p-value for the t-test << any reasonable significance level
+  From the pearson correlation test, p-value<< any reasonable significance level
+  Hence, $H_0$ is rejected in both the cases indicating that a linear relationship exists
+ -For Dell Stocks:
+  From the summary table, p-value for the t-test << any reasonable significance level
+  From the pearson correlation test, p-value<< any reasonable significance level
+  Hence, $H_0$ is rejected in both the cases indicating that a linear relationship exists
+ -For Sabre Stocks:
+  From the summary table, p-value for the t-test << any reasonable significance level
+  From the pearson correlation test, p-value<< any reasonable significance level
+  Hence, $H_0$ is rejected in both the cases indicating that a linear relationship exists  
+
+#c. 
+In order to determine whether Dell's beta coefficient is significantly greater than 1, 
+We formulate the following hypotheses as   
+$H_0$: $\beta$ <= 1   
+$H_1$: $\beta$ > 1  
+```{r}
+#Computing t_critical value by using qt function
+#Note the degrees of freedom (df) is n - k - 1 where k = number of predictors, which in this case is 1.
+t_critical <- qt(0.05, 60-1-1, lower.tail = FALSE)
+t_critical
+
+#Computing the t_test_statistic value.
+# t = (b - beta)/std. error 1.66791    0.32605
+
+t_test_stat <- (1.66791 - 1)/0.32605
+t_test_stat
+```
+Decision: 
+Since the t_test statistic > t_critical, for a right-tailed test we reject $H_0$  
+We infer at 5% significance level that beta > 1 and is statistically significant.Return on Dell stock is more risky than the returns on the market.
+
+#d. 
+In order to determine whether Walmart's beta coefficient is significantly less than 1, 
+We formulate the following hypotheses as   
+$H_0$: $\beta$ >= 1   
+$H_1$: $\beta$ < 1  
+```{r}
+#Computing t_critical value by using qt function
+#Note the degrees of freedom (df) is n - k - 1 where k = number of predictors, which in this case is 1.
+t_critical <- qt(0.05, 60-1-1, lower.tail = TRUE)
+t_critical
+
+#Computing the t_test_statistic value.
+# t = (b - beta)/std. error 0.73167    0.19121
+t_test_stat <- (0.73167 - 1)/0.19121
+t_test_stat
+```
+Decision:  
+Since the t_test_stat is less than the t_critical, for a left-tailed test we reject $H_0$.
+We infer at 5% significance level that beta < 1 and is statistically significant.Return on Walmart stock is less risky than the returns on the market.
+
+##Question 2
+```{r}
+data_ex2 <- read.csv('Question2.csv')
+head(data_ex2)
+#install.packages('benford.analysis')
+library(benford.analysis)
+#Storing the results of the Benford Analysis
+bfd.q2 <- benford(data_ex2$Invoice,number.of.digits = 1)
+plot(bfd.q2)
+
+#prints the digits by decreasing order of discrepancies
+head(suspectsTable(bfd.q2),10) 
+#gets observations of the 2 most suspicious groups
+suspects <- getSuspects(bfd.q2, data_ex2, how.many=2)
+suspects
+#duplicatesTable(bfd.q2) #--prints the duplicates by decreasing order
+```
+From the results of our Benford analysis on the given 135 invoices data,
+We can see that the leading digit distributions doesn't follow the Benford Law which indicates that the supervisor might be commiting a fraud. 
+We also have a list of observations from the two most suspicious groups
+
+For Benford's Law to be effective, following basic conditions are to be met
+ - Large Dataset: We have only 135 invoices from the supervisor which isn't large enough
+ - Randomly Generated Dataset: No where in the question, it is mentioned that the sample of 135 invoices is a random sample. thus increasing chances of sampling bias
+ - Numeric Data : We only meet this condition properly
+Our results from the Benford Analysis can't be relied upon completely as we don't meet all its requirements 
+Follow up- action items that I would have requested would have been either of the two to further confirm it:
+1.Prediction Interval using Regression Analysis
+Regression model on amount ~ equipment based variables and trained it on data from other supervisors who have clean track record
+Check if the amount mentioned by the supervisor is within these prediction intervals  
+2.Predict amount for the equipments under this supervisor and compare the deviation in the numbers mentiones by the supervisor and the predicted values
+
+##Question 3 
+As per the question, we have a regression model wth the following obsrvations of its results
+High F value => very low p-value => Overall model is significant
+For each of the two explanatory variables,
+p-value for t-test on slope coefficient $\beta$ > 0.05=> statistically insignificant 
+The probable reason for this multicollinearity. As we have more than one explanatory variable in our model, Multicollinearity will exist. If the degree of multicollinaerity is very high between the variables then we tend to see such scenarios as mentioned above
+No, we can't conclude that neither explanatory variables do a good job in predicting the dependent variable if our other model parameters are fairly good 
+We can't rely on model results only if the goal of my model is to interpret and reliably estimate the individual parameters of the chosen model
+
+##Question 4
+Let, $\mu_{p}$ be mean efficacy of placebo
+    and $\mu_{new}$ be mean efficacy of new drug   
+ - $H_{0}$ : $\mu_{new} -  \mu_{p} \leq 0$
+ - $H_{a}$ : $\mu_{new} -  \mu_{p} > 0$ i.e.$\mu_{p}$ > $\mu_{new}$
+```{r}
+#Computing t-value for reasonalble significance level
+qt(0.05, 400-1, lower.tail = FALSE)
+qt(0.01, 400-1, lower.tail = FALSE)
+#p-value for the given t-value for df=400-1
+pt(20,399,lower.tail=FALSE)
+```
+For a Right tailed Test,
+t-value of 20> any of the t-value for corresponding reasonable significance level
+Also p-value is very low thus rejecting the Null Hypothesis=> New Drug is more benificial
+The t-value is unusually high as a result the null hypothesis is getting rejected easily
+To avoid a Type 1 error, just increasing alpha won't be enough here . Instead sample size may be needed to increase or maybe the underlying data is not normal $n_1$ or $n_2$<30
+
+For the above Analysis:
+Type 1 error: $H_0$ is true and we reject $H_0$
+New drug is same or worse than placebo in reality but the statistician says to the company that new drug is better based on his results
+Type 2 error: $H_0$ is false and we do not reject $H_0$
+New drug is better but we inform the drug company that isn't
+In terms of risk or repurcussions, Type 1 will be more risky as the company might fall into legal problems for claiming incorrectly that it's better and the drug won't fare well in the market causing monetary loss
+The bio-statistician must have committed a type 1 error leading to his/her getting fired.
+##Question 5
+```{r}
+data_ex5 <- read.csv("Question5.csv")
+#head(data_ex5)
+expend <- data_ex5$EXPEND
+police <- data_ex5$POLICE
+
+#Linear functional form
+#Plotting for visual check
+plot(police,expend,  main = "Linear", xlab = "Police", ylab = "expend", pch=16)
+abline(lm(expend ~ police), col = "red")
+lines(lowess(police, expend), col="blue", lwd = 2)
+model1 <- lm(expend ~ police)
+summary(model1)
+
+#Although the R-squared is high, we have very high standard error
+#The datapoints are accumulated at extremes like a logarithmic scale, Let's try functional forms with log
+
+#lin-log functional form
+model2 <- lm(expend ~ log(police))
+summary(model2)
+#Plotting for visual check
+plot(log(police),expend,  main = "Lin-log", xlab = "Police", ylab = "expend", pch=16)
+abline(lm(expend ~ log(police)), col = "red")
+
+
+#Between 1 & 2, model 1 is a better model in terms R-squared and standard error
+#After log transform of police column, we can see that the plot is hardly aligning the distribution
+#Also, measured r-squared is low for this model and residual standard error is very high
+
+#log-log functional form
+model3 <- lm(log(expend) ~ log(police))
+summary(model3)
+#Plotting for visual check
+plot(log(police),log(expend),  main = "Log-log", xlab = "Police", ylab = "expend", pch=16)
+abline(lm(log(expend) ~ log(police)), col = "red")
+lines(lowess(log(police), log(expend)), col="blue", lwd = 2)
+
+
+pred3 <- predict(model3)   ### Fitted Values for Model 4
+#exp(pred3) #--> computing antilog 
+R_y_yhat3 <- cor(expend, exp(pred3))^2 ### Find the R-square
+Adj_R_y_yhat3 <- 1 - ((1 - R_y_yhat3))*(nrow(data_ex5) - 1)/(nrow(data_ex5)- 1 - 1) ### Value is 0.9489658
+
+### Point Prediction for expenditure for 10,000 police officers
+point_pred <- predict(model3, newdata=data.frame(police=10000))
+exp(point_pred)
+
+### Predict with 95% confidence 9.57 weeks of pay (point estimate)
+#converting them to antilog before displaying as they are log values
+pred_interval <- exp(predict(model3, newdata=data.frame(police=10000), interval = "predict"))
+pred_interval
+
+```
+
+##Question 6  
+#a.  
+```{r}
+data_ex6 <- read.csv('Question6.csv')
+head(data_ex6)
+Crew <- data_ex6$Crew.Size
+Output <- data_ex6$Output
+plot(Crew,Output,  main = "ScatterPlot", xlab = "Crew Size", ylab = "Output", pch=16)
+```
+Based on the scatterplot, the plot reaches its peak output at a crew  size of 6.
+Size of 6 seems like an optimal size 
+
+#b.Compare linear and quadratic models    
+```{r}
+#Linear Model
+model_l <- lm(Output ~ Crew)
+summary(model_l)
+#Plotting for visual check
+plot(Crew,Output,  main = "Linear", xlab = "Crew Size", ylab = "Output", pch=16)
+abline(lm(Output ~ Crew), col = "red")
+lines(lowess(Crew, Output), col="blue", lwd = 2)
+
+#Quadratic Model
+model_q <- lm(Output ~ poly(Crew, 2, raw = TRUE))
+summary(model_q)
+#Plotting for visual check
+plot(Crew,Output,  main = "Quadratic", xlab = "Crew Size", ylab = "Output", pch=16)
+lines(Crew, predict(model_q), col = "red",lwd=2)
+lines(lowess(Crew, Output), col="blue", lwd = 2)
+```
+The quadratic model is a better fit. The Adjusted R-sq is 63.07% is a tremendous improvement over negative adjusted R-squared of linear regression model
+Also, the coefficients Crew Size and Crew Size^2 are both significant whereas in case of linear, only intercept was statistically significant.
+Also, the intercept value of linear is unusually high, higher than quadratic when there is no crew in realistic terms too 
+
+#c.
+Predict jobs a crew of 5 could be expected to complete in a week. 
+```{r}
+model_q
+predict(model_q,newdata=data.frame(Crew=5))
+```
+#d. 
+Cubic Regression Model
+```{r}
+model_c <- lm(Output ~ poly(Crew, 3, raw = TRUE))
+summary(model_c)
+
+#Plotting for visual check
+plot(Crew,Output,  main = "Cubic", xlab = "Crew Size", ylab = "Output", pch=16)
+lines(Crew, predict(model_c), col = "red",lwd=2)
+lines(lowess(Crew, Output), col="blue", lwd = 2)
+
+```
+No, cubic regression doesn't improve the fit compared to quadratic.
+Adjusted R-squared for cubic is better than Linear but less compared to Quadratic.
+Also, the individual explanatory variables are no more statistically significant except Crew 
+Quadratic Model is still a better fit.
+
+##Question 7
+```{r}
+data_ex7 <- read.csv('Question7.csv')
+#head(data_ex7)
+Happiness <- data_ex7$Happiness
+Age <- data_ex7$Age
+
+#ScatterPlot for Age
+Income_f <- data_ex7$Family.Income
+plot(Age,Happiness,  main = "ScatterPlot(Age)", xlab = "Age", ylab = "Happiness", pch=16)
+lines(lowess(Age, Happiness), col="blue", lwd = 2)
+#ScatterPlot for Income
+plot(Income_f,Happiness,  main = "ScatterPlot(Income)", xlab = "Income", ylab = "Happiness", pch=16)
+lines(lowess(Income_f, Happiness), col="blue", lwd = 2)
+``` 
+For Age, the nature of relationship is hard to tell .
+But for income,the nature of relationship is somewhat linear or along a curve
+Model 1: Linear Model   
+$Y_i$=$\beta_0$ +$\beta_{age}$.Age +$\beta_{income}$.Income + $\epsilon_1$     
+Model 1.2: Quadratic Model   
+$Y_i$=$\beta_0$ +$\beta_{age}$.Age +$\beta_{income}$.Income +$\beta_{income^2}$.Income^2 + $\epsilon_{1.2}$  
+Model 2 (lin-log/Logarithmic):  
+$Y_i$=$\beta_0$ +$\beta_{age}$.Age +$\beta_{income}$.Ln(Income) + $\epsilon_2$  
+Model 3 (log-lin/Exponential):   
+Ln($Y_i$)=$\beta_0$ +$\beta_{age}$.Age +$\beta_{income}$.Income + $\epsilon_3$   
+Model 4 (log-log/log-linear):   
+Ln($Y_i$)=$\beta_0$ +$\beta_{age}$.Age +$\beta_{income}$.Ln(Income) + $\epsilon_4$   
+
+```{r}
+#Model 1 - Linear
+#Develop the multiple regression model.
+Model1 <- lm(Happiness ~ Age+Income_f)
+summary(Model1)
+
+#Model 1.2 - Quadratic
+#Develop the multiple regression model.
+Model1_2 <- lm(Happiness ~ Age+Income_f+I(Income_f^2))
+summary(Model1_2)
+
+### Model 2 - Logarithmic
+### Develop the multiple regression model.
+Model2 <- lm(Happiness ~ Age+log(Income_f))
+summary(Model2)
+
+#Model 3 - Exponential
+#Develop the multiple regression model.
+Model3 <- lm(log(Happiness) ~ Age+Income_f)
+summary(Model3)
+
+#Model 4 - Log-Log
+#Develop the multiple regression model.
+Model4 <- lm(log(Happiness) ~ Age+log(Income_f))
+summary(Model4)
+
+#Between Model 1 , 1.2 & 2
+#Standard Error has been least for Model 2 and Adjusted R-squared/R-squared had been highest for Model 2
+#Similarly for Model 3& 4
+#Standard Error has been least for Model 3 and Adjusted R-squared/R-squared had been highest for Model 4
+
+#Get the fitted values for Models 2 & 4
+pred2 <- predict(Model2)   # Fitted Values for Model 2
+R_y_yhat2 <- cor(Happiness, pred2)^2 # Find the R-squared
+Adj_R_y_yhat2 <- 1 - ((1 - R_y_yhat2))*(100 - 1)/(100-2- 1) # Value=0.5190624
+
+pred4 <- predict(Model4)   #Fitted Values for Model 4
+R_y_yhat4 <- cor(Happiness, exp(pred4))^2 # Find the R-squared
+Adj_R_y_yhat4 <- 1 - ((1 - R_y_yhat4))*(100 - 1)/(100 - 2 - 1) # Value=0.5230075
+
+#Model 4 is better than Model 2
+```
+#b.  
+```{r}
+predict(Model4, newdata = data.frame(Income_f=80000,Age))
+```
+#c  
+```{r}
+predict(Model4, newdata = data.frame(Income_f,Age=60))
+```
+
+##Question 8  
+As the same set of 32 workers' time is recorded for each, it is a paried sample
+The timings are interval in nature
+We checked for the following conditions before proceeding to the suitable tests
+For Normality: 
+a.Plotted a Histogram 
+b.Conducted following formal tests-> Anderson-Darling test
+For Constant Variance: 
+a.Levene’sTest of Equality of Variances  
+b.Plot residuals and predicted values
+
+For the paired t test (two-tailed)
+- $H_{0}$ : $\mu_{8AM} = \mu_{flex}$  
+- $H_{a}$ : $\mu_{8AM} \neq \mu_{flex}$ 
+```{r}
+data_ex8 <- read.csv('Question8.csv')
+head(data_ex8)
+
+#Test for normality
+nortest::ad.test(data_ex8$X8.00.Arr)
+nortest::ad.test(data_ex8$Flextime)
+#Histogram
+hist(data_ex8$X8.00.Arr)
+hist(data_ex8$Flextime)
+```
+As per the normality formal tests, p-value for the noramlity tests > 0.05 => failed to reject $H_0$
+At 5% significance level, we have sufficient evidence to support the claim that the distribution is normal in both the cases
+But it can be seen visually, that the plot depart a lot from a normal distribution.
+So our data didn't pass the formality test
+We didn't check for constant variance post this.
+
+We will go for nonparametric test,Following are the hypothesis for the paired sample test:
+- $H_{0}$ : The locations of two populations are the same  
+- $H_{a}$ : The location of population 1(8AM) is different from location 2(Flextime)
+```{r}
+wilcox.test(data_ex8$X8.00.Arr, data_ex8$Flextime, alt = "two.sided", paired = TRUE, conf.level = 0.95)
+```
+As p-value>0.05 => failed to reject $H_0$ 
+At 5% significance level, we dont have sufficient evidence to prove our claim that travel times under the flextime program are different from travel times to arrive at work at 8 a.m  
+
+##Question 9  
+This is an example of 2 factor ANOVA  
+Factor 1: Type of Bank- B1,B2,B3,B4 (4 levels)
+Factor 2: Type of Mortgage -M1,M2,M3 (3 levels)
+
+We test for two type of effects under 2 factorANOVA:
+Test for Main Effects - Test for difference between levels of each factor individually
+For Effect between the levels of Bank Types:  
+- $H_{0}$ : $\mu_{B1} = \mu_{B2}=... =\mu_{B4} $  
+- $H_{a}$ : Atleast one of $\mu_{B1}$,$\mu_{B2}$,$\mu_{B4}$ is different  
+
+For Effect between the levels of Mortgage types:  
+- $H_{0}$ : $\mu_{M1}=\mu_{M2}=\mu_{M3} $ 
+- $H_{a}$ : $\mu_{M1},\mu_{M2},\mu_{M3}$ are different 
+
+Test for Interaction Effect - Test for interaction between two factors
+For Effect of interaction between bank and mortgage types:
+- $H_{0}$ : $\mu_{M1:B1}=\mu_{M1:B2}=..=\mu_{M2:B1}=\mu_{M2:B2}=...=\mu_{M3:B4} $ 
+- $H_{a}$ : Atleast one of them is different 
+
+
+Interaction effect between the type of bank ad mortagage in this context will mean that that the F statistic is statiscally significant
+There is an evidence of a strong interaction between the two factors.The effect that bank type has on the mean filing errors is not independent of the type of mortgage.We can't attribute effects on the filing error on any of the factors individually as there is a strong evidence of interaction between the two.
+
+##Question 10  
+To understand the difference between standard deviation and standard error, let's consider this example
+let's say we take 5 samples of 5 mice and record their weights from a mouse population i.e.
+S1={m1,m2,m3,m4,m5}
+S2={m6,m7,m8,m9,m10}
+S3={m11,m12,m13,m14,m15}
+S4={m16,m17,m18,m19,m20}
+S5={m21,m22,m23,m24,m25}
+
+Standard deviation  quantifies the variation within set of measurements (i.e. our samples).
+Each of these sample will have a standard deviation - measure of variability from the sample mean($mean_1, mean_2, mean_3, mean_4, mean_5$) i.e. we will have 5 different SD values
+Now Standard Error quantifies the variation in the means from the multiple set of measurements i.e. the means  of the five samples namely $mean_1, mean_2, mean_3, mean_4, mean_5$ i.e. we will have one value for SE  
+
+##Question 11  
+I will go for Model1, out of all the available three models.Because with the addition of each variable only $R^2$ increasing whereas there adjusted $R^2$ is reducing ie. Decreasing or no improvement in MSE  
+$R^2$ = 1 - SSE/SST
+$R^2$ will always increase by adding a new variable, regardless of whether it adds addional prediction power or not to the model
+This incremental effect is adjusted by adding degrees of freedom to the formula
+$Adj.R^2$ = 1 - {SSE/*(n-k-1)* $/$ SST/*(n-1)*}
+          = 1 - (n-1)MSE/SST
+CASE 1: When new variable,$x_i$ doesn't add value to model(No improvement/increase in MSE)
+For every additional variable, (n-1) will be multiplied => penalizing the value
+=> 1- increased value*increased MSE 
+=> Lower R-squared
+CASE 2:
+For every additional variable $x_i$, (n-1) will be multiplied => penalizing the value
+=> 1- (increased value)*(decreased MSE)
+=> R-squared computed here will be higher than *CASE 1* 
+
+##Question 12   
+#a.  
+```{r}
+data_ex12 <- read.csv('Question12.csv')
+head(data_ex12)
+Sales <- data_ex12$SALES
+Time <- data_ex12$TIME
+Model_lt <- lm(Sales~Time)
+summary(Model_lt)
+
+plot(predict(Model_lt), residuals(Model_lt))
+```
+the plot does show a zig-zag pattern between the residuals and fitted values
+
+#b.  
+```{r}
+plot(Time,Sales,  main = "ScatterPlot", xlab = "Time", ylab = "Sales",type='o', pch=16)
+```
+#c.  
+```{r}
+# Create dummy variables for quarter
+Q1 <- ifelse(data_ex12$QUARTER == 1, 1, 0)   
+Q2 <- ifelse(data_ex12$QUARTER == 2, 1, 0)
+Q3 <- ifelse(data_ex12$QUARTER == 3, 1, 0)
+Q4 <- ifelse(data_ex12$QUARTER == 4, 1, 0)
+``` 
+
+#d.  
+```{r}
+
+### FULL MODEL: Contains ALL the independent variables, (n-1 dummy variables)
+### In this case, we have four - time,Q2,Q3,Q4.
+model_full <- lm(Sales ~ Time + Q2 + Q3 + Q4)
+summary(model_full)
+
+### REDUCED MODEL: Only Linear trend Model
+### In this case, Sales~Time
+model_red <- lm(Sales ~ Time)
+summary(model_red)
+```
+
+Hypotheses for Partial F test:  
+$H_0$: $\beta_{Q2} = \beta_{Q3} =\beta_{Q4}$=0
+which states that none of the indicator variables Q1,Q2,Q3,Q4 affects y
+$H_1$:At least one of the $\beta_{Q2},\beta_{Q3},\beta_{Q4} \neq 0$
+which states that at least one of the indicator variables Q1,Q2,Q3,Q4 affects y 
+```{r}
+#Run the anova function 
+anova(model_red,model_full) #Reduced model before full model
+```
+As, The p-value from the ANOVA output<< any reasonable significance level=> leads to the rejection of H0 
+We conclude that the full model is better  
+So we infer at any reasonable significance level that the seasonal quarter indicators have 
+a statistically significant influence on sales along with time and should be included in the analysis. 
+
+##Question 13  
+As per the question, the bank collected data on number of times debit card was used by a sample of customers during the 4 month promotion period(March-June)
+Using one way ANOVA to check if the average number of charges vary across month. Basically means, our hypotheses are these:  
+$H_0$: $\mu_{Mar} =\mu_{Apr} =\mu_{May} =\mu_{Jun}$ i.e. average number of charges stayed the same   
+$H_1$: Atleast one of $\mu_{Mar},\mu_{Apr},\mu_{May}, \mu_{Jun}$ is different  
+
+No this won't be a right analysis because we don't have data on their charges, instead we have frequency of card usage of these customers.  
+The bank has data on how many times the customers used Debit card and how many times they didn't (debit_card=Y/N)
+and across these 4 months (Months: Mar, April, May, Jun)
+So we have a contingency table with two categorical variables-debit_card and Month
+We can run a chi-square test for independence instead to know whether the debit card usage is dependent on month or not thus answering Bank's question. Our hypotheses for the correct analysis would be:  
+$H_0$: Debit Card Usage and Months are independent   
+$H_1$: Debit Card Usage and Months are dependent    
+
+##Question 14  
+#a.  
+```{r}
+data_ex14 <- read.csv("Question14.csv")
+head(data_ex14)
+
+Senior <- data_ex14$SENIOR
+Complx <- data_ex14$COMPLX
+Satis <- data_ex14$SATIS
+Absent <- data_ex14$ABSENT
+
+#Creating an inverse variable of SENIOR
+SENINV <- 1/Senior
+#Converting SATIS into dummy variables
+# Create dummy variables for quarter
+FS1 <- ifelse(Satis == 1, 1, 0)   
+FS2 <- ifelse(Satis == 2, 1, 0)
+FS3 <- ifelse(Satis == 3, 1, 0)
+FS4 <- ifelse(Satis == 4, 1, 0)
+FS5 <- ifelse(Satis == 5, 1, 0)
+
+#Full Model 
+#Run the regression containing all the independent variables (continuous + indicator)
+model_14a <- lm(Absent ~ SENINV + Complx + FS2 + FS3 + FS4 + FS5)
+summary(model_14a)
+
+#Check for multicollinearity
+car::vif(model_14a) # No evidence of very high multicollinearity
+
+```
+#b.   
+```{r}
+# Storing all vars w/o Dummy variables in a separate dataframe. 
+df_wo_dummy <- data.frame(Absent, SENINV, Complx)
+#Reduced Model 
+#Run the regression containing all the independent variables without indicators
+model_14b <- lm(Absent ~ SENINV + Complx , data=df_wo_dummy)
+summary(model_14b)
+```
+#c.    
+Hypotheses for Partial F test:  
+$H_0$: $\beta_{FS2} = \beta_{FS3} =\beta_{FS3} = \beta_{FS5}$=0
+which states that none of the indicator variables FS1, FS2,FS3,FS4 & FS5 affects y
+$H_1$:At least one of the $\beta_{FS2},\beta_{FS3},\beta_{FS3},\beta_{FS5} \neq 0$
+which states that at least one of the indicator variables FS1, FS2,FS3,FS4 & FS5 affects y
+If $H_0$ is not rejected, choose the reduced model.
+```{r}
+#Comparison of models using Partial F test
+#significance level=5%
+anova(model_14b, model_14a)
+```
+As p-value > 0.05 => Failed to reject $H_0$ which means that none of the indicator variables are contributing to explain the variation in y   
+Hence, the reduced model is superior
+#d.   
+```{r}
+#Our reduced Model is our final model
+model_14b
+#Average absenteeism rate for all employees 
+#with COMPLX = 60 and SENIOR = 30 who were very dissatisfied with their managers. 
+predict(model_14b,newdata=data.frame(Complx=60, SENINV=1/30, FS1=1))
+```
+#e.  
+```{r}
+#Average absenteeism rate for all employees 
+#with COMPLX = 60 and SENIOR = 30 who were very satisfied with their managers. 
+predict(model_14b,newdata=data.frame(Complx=60, SENINV=1/30, FS5=1))
+```
+#f   
+```{r}
+#Average absenteeism rate for all employees 
+#with COMPLX = 10 and SENIOR = 1/3 who were very dissatisfied with their managers. 
+predict(model_14b,newdata=data.frame(Complx=10, SENINV=1/3, FS1=1))
+```
+#g      
+```{r}
+#Average absenteeism rate for all employees 
+#with COMPLX = 10 and SENIOR = 1/3 who were very satisfied with their managers. 
+predict(model_14b,newdata=data.frame(Complx=10, SENINV=1/3, FS5=1))
+```
+#h     
+How could this study be used by the management to help identify employees who might be prone to absenteeism?     
+Interpreting the results of our final model(model_14b)
+ - SENINV is a statistically significant explanatory variable for Absenteeism
+Please note, SENINV=1/(no of years in company)   
+We have a positive beta coefficient assosciated with it meaning:
+Shorter the stay in company=> Smaller value of SENIOR => higher value of SENINV => higher Absenteeism (positive relationship with SENINV)
+Inshort, newer employees are more prone to absenteeism 
+ - COMPLX is not significant variable but as per its coefficient shares a negative relationship with absenteeism that can be interpreted as that higher the value of COMPLX => Lower value of ABSENT i.e. more complex the nature of the job, lesser are the chances of the employee being absent and vice-versa.  
+
+##Question 15       
+#a.    
+```{r}
+data_ex15 <- read.csv('Question15.csv')
+head(data_ex15)
+Salary <- data_ex15$SALARY
+Education <- data_ex15$EDUCAT
+Exper <- data_ex15$EXPER
+Month <- data_ex15$MONTHS
+
+#Creating dummy variable for Gender
+#1 for female, 0 for Male
+Gender <- ifelse(data_ex15$GENDER == "FEMALE", 1, 0)
+
+#Regression model with all variables to check for multicollinearity
+model_15 <- lm(Salary ~ Education + Exper + Month + Gender)
+car::vif(model_15) 
+# As VIF ~ 1 for all variables->No evidence of multicollinearity 
+
+#Multiple regression model 
+#using education level and the male/female dummies
+model_15a <- lm(Salary ~ Education + Gender)
+summary(model_15a)
+```
+#b.   
+Current Regression Model can be represented as:   
+$Y_t$=$\alpha_1 + \alpha_2$.Gender +$\beta_1$.Education +$\epsilon_t$
+Two regression models can be written as:
+E($Y_t$|$Gender=1,X_t$)=$(\alpha_1 + \alpha_2) +\beta_1.Education$ ---1          
+E($Y_t$|$Gender=0,X_t$)=$(\alpha_1) +\beta_1.Education$ ---2   
+Our differential intercept is $\alpha_2$ and parameter estimate is $\beta_1$.  
+Our $\alpha_1$<0 and is very small in value
+and our parameter estimate $\beta_1$~1 as a result the salary for a female (refer to eq.1 when Gender=1) for the same education level as a male(refer to eq.2 when Gender =0)  will be essentially 1 more than male's salary
+Based on this model, there seem to be employment discrimination(female employees are paid more than males by 1 unit).
+
+#c.   
+```{r}
+predict_female <- predict(model_15a,newdata=data.frame(Gender=1,Education))
+predict_male <- predict(model_15a,newdata=data.frame(Gender=0,Education))
+
+plot(Education, predict_female,type='o',col='red',ylab='Predicted Salaries',xlab='Education')
+points(Education, predict_male,type='o',col="green")
+```
+As can be seen from the plots of predicted male and female salaries, We can see that this is an example of *parallel regression*. The intercepts are different in the way explained below:
+For males, intercept for the regression line is just $\alpha_1$
+For females, intercept for the regression line is $\alpha_1$ + $\alpha_2$ = $\alpha_1$ + 1
+There is a difference of 1 between the intercepts of the two lines.
+The slope $\beta_1$ is same for both males and females.     
+
+#d.  
+Taking into consideration the interaction between education and gender
+```{r}
+#With Interaction
+model_15d<- lm(Salary ~ Education + Gender + Education:Gender)
+summary(model_15d)
+
+#Visual Check
+predict_female <- predict(model_15d,newdata=data.frame(Gender=1,Education))
+predict_male <- predict(model_15d,newdata=data.frame(Gender=0,Education))
+plot(Education, predict_female,type='o',col='red',ylab='Predicted Salaries',xlab='Education')
+points(Education, predict_male,type='o',col="green")
+
+```
+Current Regression Model can be represented as:   
+$Y_t$=$\alpha_1 + \alpha_2$.Gender +$\beta_1$.Education +$\beta_2$.Education.Gender +$\epsilon_t$
+Two regression models can be written as:
+E($Y_t$|$Gender=1,X_t$)=$(\alpha_1 + \alpha_2) +(\beta_1 +\beta_2).Education$ ---1          
+E($Y_t$|$Gender=0,X_t$)=$(\alpha_1) +\beta_1.Education $ ---2   
+From the summary stats of this model, it can be seen that the interaction effect is not significant
+The value of $\beta_2$ is very small and the value of $\beta_1+\beta_2$ > $\beta_1$ because of positive value of $\beta_2$. As a result, for the same education level, salary of a female employee would be higher by (1 + $\beta_2$.Education)~1 than a male employee   
+
+#e.   
+No, the interaction effect is not significant as the p-value for the individual t-test >>>any reasonable significance level i.e. *failed to rejec*t the null hypothesis,$H_0$ that $\beta_{interaction}$=0
+The dummy variable, Gender is statistically significant in explaining Salary as the p-value <<< any reasonable significance level i.e. *rejected* null hypothesis,$H_0$ that $\beta_{Gender}$=0   
+
+#f.   
+The difference between the model with interaction variable and the model with only EDUCATION and the dummy variable was the differential slope coefficient which turned out to be insignificant in our case
+The model with Interaction term enabled us to differentiate between slope coefficients of the two gender, and the dummy variable,Gender in the additive form enabled us to distinguish between the intercepts of the two Gendergroups.
+The interaction model help us to gauge if the interaction between education and gender(beta coefficient) had a significant role in Salary of emplyees whereas the beta coefficients of Education and Gender in the other model helped us understand their significance in explaining salary individually
+Since the differential slope coefficient, $\beta_2$ is statistically insignificant but $\alpha_2$ is significant, we can conclude that the two regressions have the same slope i.e.two regressions are parallel.
+##Question 16  
+```{r}
+#Growth rate models are log-lin models
+### LN(Real GNP) = beta0 + beta1*Time + error
+### LN(Labor Force Participation) = beta0 + beta1*Time + error
+### LN(S&P 500) = beta0 + beta1*Time + error
+### LN(S&P 500 quarterly) = beta0 + beta1*Time + error
+
+### Interpretation of Slope:
+### The slope coefficient,B2 means this is the instantaneous growth rate,
+
+#To compute the compound growth rate, we take the slope to equal ln(1 + r).
+#(r <- exp(B2) - 1)
+
+###Comp_GR	Growth_R	    B1	  B2	   r-sq
+### 3.07%	   3.02%	   7.2492	 0.0302	0.9839
+### 5.44%	   5.30%	   4.1056	 0.053	0.9464
+### 4.67%	   4.56%	   3.696	 0.0456	0.8633
+### 1.15%	   1.14%	   3.7115	 0.0114	0.8524 (per Quarter)
+
+```
+##Question 17 
+```{r}
+data_ex17 <- read.csv("Question17.csv")
+head(data_ex17)
+
+#Creating dummy variable for Garage
+Garage_Dummy <- ifelse(data_ex17$GARAGE == "Yes", 1, 0)
+Cost <- data_ex17$COST
+Temp <- data_ex17$TEMP
+Insul <- data_ex17$INSUL
+Age_f <- data_ex17$AGE
+
+#Regression model with all variables to check for multicollinearity
+model_17 <- lm(Cost ~ Temp + Insul + Age_f + Garage_Dummy)
+
+car::vif(model_17) 
+# As VIF ~ 1 for all variables->No evidence of multicollinearity 
+
+#Storing all vars in a separate dataframe. 
+df_17 <- data.frame(Cost, Temp, Insul, Age_f, Garage_Dummy)
+
+# Run Stepwise Regression
+model <- lm(Cost ~ ., data = df_17)
+k <- olsrr::ols_step_both_p(model, prem = 0.10, pent = 0.10, details = TRUE)
+
+#creating a separate data frame with selected variables
+df_17_sel <- data.frame(Cost, Temp, Insul,Garage_Dummy)
+
+#Scatterplot to check for any evidence of nonlinearity
+pairs(df_17_sel[1:2], panel = panel.smooth)
+
+model_17_final <- lm(Cost ~ Temp + Insul + Garage_Dummy)
+summary(model_17_final)
+
+#Regression diagnostics
+resids_17 <- residuals(model_17_final)
+pred_17 <- predict(model_17_final)
+
+plot(pred_17, resids_17)
+#Histogram for residuals
+hist(resids_17)
+```
+
+##Question 18    
+In evaluating the performance of new hires, the HR division found that candidates with higher scores on its qualifying exam performed better. In a multiple regression that also used the education of the new hire as a regressor variable, the slope for the test score was zero. This is due to multicollinearity 
+As its a multiple regression, there are other explanatory variables or a linear combination of explanatory variables which are highly correlated to test score  
+We can try to resolve this by removing the variable, re-expressing the explanatory variable or do nothing as long as we are not making inferences on individual parameters (test score in our case) 
+
+##Question 19  
+Managers in the HR department suspect that sick-day absentee rates are higher on some weekdays than others. 
+To investigate this claim, the manager can run a one factor ANOVA or Kruskal-Wallis test based on whether normality test is passed for the underlying data
+Our Hypotheses for one-factor ANOVA:  
+$H_0$: $\mu_{Mon}=\mu_{Tue}=\mu_{Wed}=\mu_{Thu}=\mu_{Fri}$i.e. average number of sick leaves is same for all weekdays
+$H_1$: Atleast one of $\mu_{Mon},\mu_{Tue},..\mu_{Fri}$ is different  
+If our p-value< chosen significance level => We reject the $H_0$
+We will have sufficient evidence at chosen significance level to support managers claim that sick-day absentee rates are higher on some weekdays than others  
+
+Our Hypotheses for Kruskal-Wallis test:  
+$H_0$: The locations of all 𝑘𝑘populations are the same.
+$H_1$: At least two population locations differ.  
+If our p-value< chosen significance level => We reject the $H_0$
+We will have sufficient evidence at chosen significance level to support managers claim that sick-day absentee rates are higher on some weekdays than others 
+
+##Question 20  
+A manager in the previous question thinks that the absentee rate is the same on Monday and Friday, but different from the rate on Tuesday and Thursday 
+Based on passing of normality test, if either of the tests manage to reject the Null hypothesis i.e.  
+At chosen significance level, There is sufficent evidence to support the claim that the absentee rate is different across weekdays.  
+We can further run the analyses to check where exactly the difference lies to test manager's claim stated in the question.to identify is which hospital(s) differ(s).
+For that we need to run a post hoc test like we ran Tukey’s test for One-Factor ANOVA.
+For Kruskal-Wallis test, there are many post hoc tests.
+1.pairwise.wilcox.test
+2.Dunn test with Bonferroni adjustment
+3.Nemenyitest (not appropriate for groups with unequal sample sizes)
+Pairs with p-value<significance level => are pairs with statistical difference in their averages
+```
+
+
+
+

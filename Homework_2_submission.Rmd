@@ -1,0 +1,194 @@
+---
+title: "Stats Exploration HW 2"
+author: "Shalini Mishra"
+date: "10/8/2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+**Question 1**  
+
+- $H_{0}$ : $\mu \geq 22$
+- $H_{a}$ : $\mu < 22$
+		
+
+```{r}
+#sample size
+n <- 220
+q1_data <- read.csv('Question1.csv')
+head(q1_data)
+t.test(q1_data$Payment,alternative="less",mu=22)
+#type 1 more serious
+
+```
+As p-value=0.1752>0.05, we failed to reject the null hypothesis.
+Hence, the CFO can't conclude that the system is profitable.
+
+At 5% significance level, there is not sufficient evidence to support the claim that the proposal of CFO to use SSA (self addressed stamped) envelopes is profitable for the company.
+
+**Question 2**
+
+-  $H_{0}$ : $p_{r} \leq 0.5$
+-  $H_{a}$ : $p_{r} > 0.5$
+		
+
+```{r}
+q2_data <- read.csv("Question2.csv")
+#(q2_data)
+n <- nrow(q2_data)
+num_dem <- length(which(q2_data == 1)) #code 1 for democrat votes
+num_rep <- length(which(q2_data == 2)) #code 2 for republican votes
+prop.test(num_rep, n, alternative = "greater", p = 0.5, conf.level=0.95)
+#reject null hypothesis
+```
+At 5% significance level, there is sufficient evidence to support the claim that Republicans will win the elections. 
+Based on the estimation, the network should announce at 8:01 p.m. that the Republican candidate will win.
+
+**Question 3**  
+Let $\mu$ be the weekly spent average for the town.
+
+-  $H_{0}$ : $\mu = 150$
+-  $H_{a}$ : $\mu \neq 150$
+
+*a*   
+```{r a}
+q3_data <- read.csv("Question3.csv")
+#head(q3_data)
+#At a significance level of 5%
+t.test(q3_data$Weekly_food_expense,alternative="two.sided",mu=150)
+
+```
+
+At 5% significance level, p value (say p) =0.000176
+- p<0.10 (10% significance) => Reject the null Hypothesis, $H_{0}$
+- p<0.05 ( 5% significance) => Reject the null Hypothesis, $H_{0}$
+- p<0.01 ( 1% significance) => Reject the null Hypothesis, $H_{0}$
+
+Yes, the sample evidence is statistically significant. We can reject the null hypotheses 
+From 1% to 10% significance level, there is sufficient evidence to support the claim that the weekly spent average for the town is different than the national average.
+
+*b*  
+```{r b}
+#1% significance level
+t.test(q3_data$Weekly_food_expense,alternative="two.sided",conf.level=0.99,mu=150)
+#Critical values for 1% significance
+a <- 150-(qt(0.995,nrow(q3_data)-1)*sd(q3_data$Weekly_food_expense)/(sqrt(nrow(q3_data))))
+b <- 150+(qt(0.995,nrow(q3_data)-1)*sd(q3_data$Weekly_food_expense)/(sqrt(nrow(q3_data))))
+cat("Any value of sample mean below",a,"and any value above",b,"will reject the null hypothesis at 1% significance level \n")
+
+#10% significance level
+t.test(q3_data$Weekly_food_expense,alternative="two.sided",conf.level=0.90,mu=150)
+#critical values for 10% significance
+a <- 150-(qt(0.95,nrow(q3_data)-1)*sd(q3_data$Weekly_food_expense)/(sqrt(nrow(q3_data))))
+b <- 150+(qt(0.95,nrow(q3_data)-1)*sd(q3_data$Weekly_food_expense)/(sqrt(nrow(q3_data))))
+cat("Any value of sample mean below",a,"and any value above",b,"will reject the null hypothesis at 10% significance level\n")
+
+
+```
+
+**Question 4**  
+Let $\sigma^2$ be the variance of the daily demand of the product.  
+
+-  $H_{0}$ : $\sigma^2 = 250$
+-  $H_{a}$ : $\sigma^2 \neq 250$
+
+```{r}
+q4_data <- read.csv("Question4.csv")
+#head(q4_data)
+n <- nrow(q4_data)
+EnvStats::varTest(q4_data$Demand,alternative = "two.sided",sigma.squared=250)
+```
+p-value=0.708 > 0.05 (5% significance) => Failed to reject H0
+The data doesn’t provide enough evidence at the 5% significance level to infer that the operations research analyst’s assumption about the variance is wrong.
+At 5% significance level, there is not sufficient evidence to support the claim that variance is different than 250.
+
+
+**Question 5**  
+
+-  $H_{0}$ : $p_{w} \geq 0.14$
+-  $H_{a}$ : $p_{w} < 0.14$
+
+*a.*  
+From the alternate hypothesis, we can see it’s a left tailed test.
+To determine the sample proportion values that will lead to the show’s cancellation, assuming a 5% significance level,
+We will have to find the critical value 
+```{r}
+z_score <- qnorm(0.95)
+p_hat <- 0.14
+p_critical <- p_hat - z_score*(sqrt(p_hat*(1-p_hat)/1500))
+p_critical
+```
+the sample proportion values that will lead to the show’s cancellation, assuming a 5% significance level are:
+Any sample proportion below 12.5%
+
+Hence ,There is  sufficient evidence at 5% significance level to support the claim that the show have viewership less than 14% to get it cancelled only when sample proportion < 12.5% 
+
+*b*.  
+My goal is to find the significance level which will give me the same rejection critical proportion as above
+
+Using the same p-critical value ie. 12.5%, we will try to obtain the corresponding z-score
+A sample will reject the null hypothesis if the proportion of people watching it will be below 12.5%
+With a new population proportion of 13.4%, we will find the z-score
+
+```{r}
+z_score <- (0.125-0.134)/(sqrt((0.134*(1-0.134))/1500))
+
+z_score
+pnorm(z_score,mean=0,sd=1,lower.tail=TRUE)
+
+```
+The probability that a sample will lead to rejection of the null hypothesis is 15.3% 
+
+**Question 6** 
+
+-  $H_{0}$ : Declare Emergency, fuel=0
+-  $H_{a}$ : enough fuel to stay afloat for 15 mins, fuel>0
+
+Error Analysis table is in the word
+
+
+**Question 7**  
+
+-  $H_{0}$ : the accused is innocent, not enough votes 
+-  $H_{a}$ : the accused is guilty, jury votes unanimously
+
+*a.*
+According to the question,
+Evidence in the trial of an innocent suspect is enough to convince 42% of all jurors in the population that the suspect is guilty.
+Each of these 12 jurors are picked from the population.
+Probability that a juror is voting for an innocent suspect as guilty =p=0.42
+As they are voting unanimously, I am considering each activity of voting as an event
+
+Probability that a jury convicts an innocent suspect 
+= p x p x p x…….12 times = p12 = (0.42)12 ~ 0.00003
+
+```{R}
+prob_convict_when_innocent <- dbinom(12,12,0.42)
+prob_convict_when_innocent
+```
+
+*b.*  
+Refer to the error analysis table drawn for this question in the word file
+Type 1 error was committed by the Jury in part (a)
+
+*c.*  
+Evidence in the trial of a guilty suspect is enough to convince 99% of all jurors in the population that the suspect is guilty.
+Probability of a juror voting that the suspect is guilty =0.99
+Probability of the jury voting that the suspect is guilty(conviction) = 0.99 X 0.99 X …12 times
+						            = 0.9912 = 0.88638487 ~ 0.886
+Probability of the jury voting that the suspect is not guilty (acquitted) = 1 – Prob(conviction by jury)
+							= 1-0.886 = 0.114
+
+```{R}
+prob_conv_when_guilty <- dbinom(12,12,0.99)
+prob_acquit_when_guilty <- 1- dbinom(12,12,0.99)
+prob_acquit_when_guilty
+
+```
+*d.*  
+From the error analysis table drawn in part(b)
+We can conclude that the case in part (c) is a type 2 error.
